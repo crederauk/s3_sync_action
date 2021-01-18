@@ -1,0 +1,50 @@
+# action.yml
+name: 'dmwgroup/s3-sync'
+description: 'Syncs directory to AWS S3'
+inputs:
+  SOURCE_DIRECTORY:
+    description: 'The local directory to sync to S3'
+    required: true
+  S3_BUCKET:
+    description: 'The AWS S3 Name/ID that the directory will be synced to'
+    required: true
+  AWS_ACCESS_KEY_ID:
+    description: 'The access key ID of the account that the github user or role is in'
+    required: true
+  AWS_SECRET_ACCESS_KEY:
+    description: 'The secret access key of the account that the github user or role is in'
+    required: true
+  AWS_REGION:
+    description: 'The AWS Region that the account is in - defaults to "us-east-1"'
+    required: false
+    default: "us-east-1"
+  S3_PATH:
+    description: 'The path to the directory in the S3 bucket that you want to sync to (if blank, will stnc to root folder)'
+    required: false
+    default: null
+  ASSUME_ROLE: 
+    description: 'The name of the role to assume, if needed'
+    required: false
+    default: null
+  ACCOUNT_ID:
+    description: 'The AWS Account ID - only used if ASSUME_ROLE is provided - uses STS CLI call, if not provided'
+    required: false
+    default: null
+  AWS_S3_ENDPOINT:
+    description: 'The endpoint URL for the S3 to sync to'
+    required: false
+    default: null
+
+
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.SOURCE_DIRECTORY}}
+    - ${{ inputs.S3_BUCKET }}
+    - ${{ inputs.S3_PATH }}
+    - ${{ inputs.AWS_ACCESS_KEY_ID }}
+    - ${{ inputs.  AWS_SECRET_ACCESS_KEY }}
+    - ${{ inputs.AWS_REGION }}
+    - ${{ inputs.AWS_S3_ENDPOINT }}
