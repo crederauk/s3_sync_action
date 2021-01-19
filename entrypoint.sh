@@ -22,7 +22,7 @@ function aws_configure() {
 function assume_role() {
     if [[ ! -z ${ASSUME_ROLE} ]]; then 
         echo "Assuming Role: ${ASSUME_ROLE}"
-        ROLE="arn:aws:iam::${ACC_ID}:role/${ASSUME_ROLE}"
+        ROLE="arn:aws:iam::${ACCOUNT_ID}:role/${ASSUME_ROLE}"
         CREDENTIALS=$(aws sts assume-role --role-arn ${ROLE} --role-session-name ecrpush --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
         read id key token <<< ${CREDENTIALS}
         export AWS_ACCESS_KEY_ID="${id}"

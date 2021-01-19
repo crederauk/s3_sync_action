@@ -12,7 +12,7 @@ This Action syncs a local directory to S3 - can be used host a site from S3.
 | `AWS_REGION` | `us-east-1` | Your AWS region |
 | `S3_PATH` | `null` | The path to the directory in the S3 bucket that you want to sync to (if blank, will stnc to root folder) |
 | `ASSUME_ROLE` | `null` | The name of the role to assume, if needed |
-| `ACCOUNT_ID` | `null`* | The AWS Account ID - only used if ASSUME_ROLE is provided *uses STS CLI call, if not provided |
+| `ACCOUNT_ID` | `null`* | The AWS Account ID of the role to assume - only used if ASSUME_ROLE is provided *uses STS CLI call to get current account ID if not provided |
 | `AWS_S3_ENDPOINT` | `null` | The endpoint URL for the S3 to sync to |
 
 ## Additional Args
@@ -34,6 +34,7 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'eu-west-2'
+        ACCOUNT_ID: '12345678910'
         S3_PATH: 'site_files'
         ASSUME_ROLE: 's3_uploader_role'
 ```
