@@ -16,7 +16,7 @@ function check_for_required_env_vars() {
 function aws_configure() {
     export AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID
     export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
-    export AWS_DEFAULT_REGION=$INPUT_REGION
+    export AWS_DEFAULT_REGION=$AWS_REGION
 }
 
 function assume_role() {
@@ -28,14 +28,14 @@ function assume_role() {
         export AWS_ACCESS_KEY_ID="${id}"
         export AWS_SECRET_ACCESS_KEY="${key}"
         export AWS_SESSION_TOKEN="${token}"
-        echo "Role: ${INPUT_ASSUME_ROLE} assumed"
+        echo "Role: ${ASSUME_ROLE} assumed"
     else 
         echo "No \"ASSUME_ROLE\" variable passed in - using credintials for role instead"
     fi
 }
 
 function sync(){
-    sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
+    sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${S3_BUCKET}/${DEST_DIR} \
         --no-progress \
         ${ENDPOINT} $*"
 }
@@ -49,9 +49,12 @@ function unset_aws(){
 function main(){
     check_for_required_env_vars
 
-    if [[ -z "$AWS_REGION" ]]; then
-        echo "Environment variable: \"AWS_REGION\" not provided, defaulting to us-east-1"
-        AWS_REGION="us-east-1"
+    if [[ -z "$INPUT_REGION" ]]; then
+        echo "Environment variable: \"INPUT_REGION\" not provided, defaulting to us-east-1"
+        export AWS_REGION="us-east-1"
+    else
+        echo "Region set to: \"$INPUT_REGION\""
+        export AWS_REGION="$INPUT_REGION"
     fi
 
     if [[ -z "$S3_PATH" ]]; then
